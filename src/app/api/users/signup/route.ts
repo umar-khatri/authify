@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     console.log(reqBody);
 
     await connect();
-    // Check if user already exists
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -22,39 +22,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    // Generate a verification token (to be used in email verification link)
     const verifyToken = crypto.randomBytes(32).toString("hex");
-    const verifyTokenExpiry = Date.now() + 3600000; // Token expiry in 1 hour
+    const verifyTokenExpiry = Date.now() + 3600000;
 
-    // New user
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      verifyToken, // Save the token in the user's document
-      verifyTokenExpiry, // Save the expiry
+      verifyToken,
+      verifyTokenExpiry,
     });
 
     const savedUser = await newUser.save();
     console.log(savedUser);
 
-    // Construct verification URL
-    // Log the full URL to ensure it's correct
     const verificationUrl = `${process.env.DOMAIN}/verifyemail?token=${verifyToken}`;
     console.log("Verification URL: ", verificationUrl);
 
-    // Send verification email
     await sendEmail(email, "VERIFY", verificationUrl);
 
     return NextResponse.json({
       message: "User created successfully. Please verify your email.",
       success: true,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }

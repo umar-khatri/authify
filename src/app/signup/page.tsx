@@ -31,8 +31,12 @@ export default function SignupPage() {
         );
         router.push("/verifyprompt"); // Redirect to the verification prompt
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || "Signup failed!");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.error || "Signup failed!");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }

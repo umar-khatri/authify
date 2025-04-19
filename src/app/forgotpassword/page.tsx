@@ -10,8 +10,18 @@ export default function ForgotPasswordPage() {
     try {
       await axios.post("/api/users/forgotpassword", { email });
       toast.success("Password reset email sent!");
-    } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to send email");
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        axios.isAxiosError(err) &&
+        typeof err.response?.data?.error === "string"
+      ) {
+        toast.error(err.response.data.error);
+      } else {
+        toast.error("Failed to send email");
+      }
     }
   };
 
@@ -33,7 +43,7 @@ export default function ForgotPasswordPage() {
         />
         <button
           onClick={handleSubmit}
-          className="w-full bg-blue-600 hover:bg-blue-700 transition duration-200 text-white py-2 rounded-lg font-medium cursor-pointer"  
+          className="w-full bg-blue-600 hover:bg-blue-700 transition duration-200 text-white py-2 rounded-lg font-medium cursor-pointer"
         >
           Send Reset Link
         </button>

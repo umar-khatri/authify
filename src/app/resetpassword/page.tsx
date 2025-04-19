@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -24,8 +24,12 @@ export default function ResetPasswordPage() {
       await axios.post("/api/users/resetpassword", { token, password });
       toast.success("Password reset successfully!");
       setSuccess(true);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.error || "Error resetting password");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        toast.error(err.response?.data?.error || "Error resetting password");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -35,7 +39,7 @@ export default function ResetPasswordPage() {
         router.replace("/login");
       }, 3000);
     }
-  }, [success]);
+  }, [success, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4">
@@ -73,5 +77,13 @@ export default function ResetPasswordPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="text-white">Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

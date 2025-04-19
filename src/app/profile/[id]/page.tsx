@@ -30,7 +30,7 @@ export default function UserProfile() {
       await axios.get("/api/users/logout");
       toast.success("Logged out successfully");
       router.replace("/login");
-    } catch (error: any) {
+    } catch {
       toast.error("Logout failed");
     }
   };

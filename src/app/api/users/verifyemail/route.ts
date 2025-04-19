@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
     const { token } = reqBody;
     console.log(token);
 
-    // Find user with the token and check expiration
     const user = await User.findOne({
       verifyToken: token,
       verifyTokenExpiry: { $gt: Date.now() },
@@ -18,12 +17,10 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ message: "Invalid or expired token" }, { status: 400 });
     }
-    console.log(user);
 
-    // Update user verification status
     user.isVerified = true;
-    user.verifyToken = undefined; // Remove the token
-    user.verifyTokenExpiry = undefined; // Remove expiry
+    user.verifyToken = undefined;
+    user.verifyTokenExpiry = undefined;
     await user.save();
 
     return NextResponse.json({
@@ -31,7 +28,10 @@ export async function POST(request: NextRequest) {
       toastMessage: "Your email has been verified successfully!",
       toastType: "success",
     }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ message: "An unknown error occurred" }, { status: 500 });
   }
 }

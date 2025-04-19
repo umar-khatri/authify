@@ -1,11 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Home() {
-  const router = useRouter();
-// main page
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex flex-col">
       {/* Navbar */}

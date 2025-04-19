@@ -14,14 +14,14 @@ export default function ProfileRedirectPage() {
         const response = await axios.get("/api/users/me");
         const userId = response.data.data._id;
         router.replace(`/profile/${userId}`);
-      } catch (error: any) {
+      } catch {
         toast.error("Failed to fetch user. Redirecting to login...");
         router.replace("/login");
       }
     };
 
     redirectToUserProfile();
-  }, []);
+  }, [router]); // Added router to the dependency array
 
   return (
     <div className="text-white flex justify-center items-center h-screen">

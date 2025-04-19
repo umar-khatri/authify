@@ -11,10 +11,13 @@ export async function GET(request: NextRequest) {
     const user = await User.findOne({ _id: userId }).select("-password");
 
     return NextResponse.json(
-      { mesage: "user found", data: user },
-      { status: 200 } 
+      { message: "User found", data: user },
+      { status: 200 }
     );
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 400 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ message: "An unknown error occurred" }, { status: 400 });
   }
 }

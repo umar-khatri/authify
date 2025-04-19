@@ -22,11 +22,18 @@ export default function LoginPage() {
   const onLogin = async () => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/users/login", user);
+      await axios.post("/api/users/login", user);
       toast.success("Login successful!");
       router.push("/profile");
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Login failed!";
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        axios.isAxiosError(error) &&
+        typeof error.response?.data?.message === "string"
+          ? error.response.data.message
+          : "Login failed!";
       toast.error(errorMessage);
     } finally {
       setLoading(false);

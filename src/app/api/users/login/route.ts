@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     if (!process.env.TOKEN_SECRET) {
       throw new Error("TOKEN_SECRET is not defined in environment variables");
     }
+
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
       expiresIn: "1h",
     });
@@ -61,7 +62,10 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 }

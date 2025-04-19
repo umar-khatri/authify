@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function VerifyEmailPage() {
-  const router = useRouter();
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);
@@ -30,10 +28,21 @@ export default function VerifyEmailPage() {
         setVerified(true);
         toast.success("Email verified successfully!");
         console.log("Verification success:", response.data);
-      } catch (err: any) {
-        console.error("Verification failed:", err.response?.data || err.message);
+      } catch (err: unknown) {
+        if (
+          typeof err === "object" &&
+          err !== null &&
+          "response" in err &&
+          axios.isAxiosError(err) &&
+          typeof err.response?.data?.error === "string"
+        ) {
+          console.error("Verification failed:", err.response.data.error);
+          toast.error(err.response.data.error);
+        } else {
+          console.error("Verification failed:", err);
+          toast.error("Verification failed!");
+        }
         setError(true);
-        toast.error(err.response?.data?.error || "Verification failed!");
       }
     };
 
