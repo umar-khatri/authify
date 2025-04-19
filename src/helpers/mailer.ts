@@ -15,7 +15,7 @@ export const sendEmail = async (email: string, emailType: string, link: string) 
       from: process.env.MAILER_USER,
       to: email,
       subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-      html: `<p>Click this to <a href="${link}">${emailType === "VERIFY" ? "Verify your Email" : "Reset your Password"}</a></p>`,
+      html: `<p>Click here to <a href="${link}">${emailType === "VERIFY" ? "Verify your Email" : "Reset your Password"}</a></p>`,
     };
 
     const mailResponse = await transport.sendMail(mailOptions);

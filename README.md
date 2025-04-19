@@ -106,9 +106,9 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📸 Screenshots
 
-| Login Page                     | Email Verification                  | Profile Page                    |
+| Landing Page                     | Login Page                  | Profile Page                    |
 |-------------------------------|-------------------------------------|----------------------------------|
-| ![Login](./public/screens/login.png) | ![Verify](./public/screens/verify.png) | ![Profile](./public/screens/profile.png) |
+| ![Login](./public/screens/landing.png) | ![Verify](./public/screens/login.png) | ![Profile](./public/screens/profile.png) |
 
 > 📷 Add your own screenshots in `public/screens` and update paths above.
 
