@@ -128,8 +128,3 @@ Have ideas or found a bug?
 Feel free to open an issue or submit a pull request!  
 Let's build secure, fast, and delightful auth together.
 
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
