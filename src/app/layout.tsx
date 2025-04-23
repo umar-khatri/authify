@@ -14,9 +14,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Authify",
-  description: "Your go-to authentication solution",
+export const metadata = {
+  title: "🔐 Authify",
+  description: "Secure and simple authentication system built with Next.js",
+  icons: {
+    icon: "@/favicon.ico", 
+  },
 };
 
 export default function RootLayout({
